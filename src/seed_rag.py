@@ -6,6 +6,11 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_openai import OpenAIEmbeddings
 from langchain_postgres import PGVector
 
+load_dotenv()
+
+connection = os.getenv("DATABASE_URL")
+if not connection:
+    raise ValueError("Chưa tìm thấy DATABASE_URL trong file .env")
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 collection_name = "company_policies"
