@@ -51,6 +51,9 @@ def get_system_message():
 
     prompt = f"""Bạn là bộ não trung tâm của hệ thống Insight Agent.
     
+    Nhiệm vụ: Phân tích yêu cầu của người dùng và SỬ DỤNG TOOL để lấy thông tin (nếu cần thiết).
+    1. Nếu liên quan đến dữ liệu (SQL), chính sách (RAG), biểu đồ -> Gọi TOOL phù hợp.
+    2. Nếu là câu hỏi chung (ví dụ: 'thời tiết', 'nấu ăn', 'tâm sự') -> KHÔNG gọi tool, hãy trả lời: 'GENERAL_CHAT'
     
     Các Tool có sẵn:
     1. query_sql_db: Lấy số liệu từ DB. Schema: {schema_info}.
