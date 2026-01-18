@@ -26,6 +26,7 @@ from src.tools import (
 class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
     is_out_of_scope: bool
+    retry_count: int
 
 
 class RouteResponse(BaseModel):
@@ -55,6 +56,14 @@ def get_system_message():
     1. Nếu liên quan đến dữ liệu (SQL), chính sách (RAG), biểu đồ -> Gọi TOOL phù hợp.
     2. Nếu là câu hỏi chung (ví dụ: 'thời tiết', 'nấu ăn', 'tâm sự') -> KHÔNG gọi tool, hãy trả lời: 'GENERAL_CHAT'
     
+    QUY TRÌNH SUY LUẬN ĐA BƯỚC:
+    1. Phân tích yêu cầu -> Chọn Tool.
+    2. Nếu kết quả Tool trả về là LỖI (Error), bạn phải:
+    - Đọc kỹ thông báo lỗi.
+    - Suy luận tại sao lỗi (ví dụ: nhầm tên cột, thiếu điều kiện JOIN).
+    - Tự sửa lại câu lệnh và gọi lại Tool đó một lần nữa.
+    3. Bạn có tối đa 3 lần thử lại cho mỗi yêu cầu.
+    
     Các Tool có sẵn:
     1. query_sql_db: Lấy số liệu từ DB. Schema: {schema_info}.
     - LƯU Ý: Tuyệt đối KHÔNG dùng dấu chấm phẩy (;) cuối câu lệnh SQL.
@@ -75,6 +84,7 @@ def get_system_message():
 def agent_router_node(state: AgentState):
     """Node này thực hiện phân loại và lưu kết quả vào State"""
     messages = state["messages"]
+    context = "\n".join([msg.content for msg in messages])
     last_user_message = messages[-1].content
     today = datetime.now().strftime("%d/%m/%Y")
 
@@ -88,7 +98,7 @@ def agent_router_node(state: AgentState):
         HÔM NAY LÀ: {today}.
 
         NHIỆM VỤ:
-        Phân tích câu hỏi cuối cùng của người dùng để quyết định xem nó có thể được giải quyết bằng các công cụ dữ liệu nội bộ hay không.
+        Dựa vào ngữ cảnh và ĐẶC BIỆT chú ý đến câu hỏi cuối cùng của người dùng để quyết định xem nó có thể được giải quyết bằng các công cụ dữ liệu nội bộ hay không.
 
         DANH MỤC TRONG PHẠM VI (is_out_of_scope = False):
         - Mọi câu hỏi về doanh thu, đơn hàng, khách hàng, tồn kho, sản phẩm (Sử dụng SQL).
@@ -104,11 +114,11 @@ def agent_router_node(state: AgentState):
         BẮT BUỘC: Nếu câu hỏi có chứa từ khóa liên quan đến 'doanh thu', 'bán hàng', 'quy định', 'bao nhiêu' -> Phải trả về is_out_of_scope = False.
         """,
             ),
-            ("human", "{last_user_message}"),
+            ("human", "{context}"),
         ]
     )
 
-    final_prompt = check_prompt.format(last_user_message=last_user_message)
+    final_prompt = check_prompt.format(context=context)
     result = structured_llm.invoke(final_prompt)
 
     print("\n--- [ROUTER LOG] ---")
@@ -133,12 +143,15 @@ def route_after_classification(state: AgentState):
 def agent_node(state: AgentState):
     """Hàm này gọi tool và trả về dữ liệu thô"""
     messages = state["messages"]
+    if "retry_count" not in state:
+        state["retry_count"] = 0
+        
     if not isinstance(messages[0], SystemMessage):
         sys_msg = get_system_message()
         messages = [sys_msg] + messages
 
     response = llm_with_tools.invoke(messages)
-    return {"messages": [response]}
+    return {"messages": [response], "retry_count": state["retry_count"] + 1}
 
 
 def general_chat_node(state: AgentState):
@@ -188,6 +201,11 @@ def node_router(state: AgentState):
     last_message = messages[-1]
     if last_message.tool_calls:
         return "tools"
+    
+    if isinstance(last_message, ToolMessage) and ("Error" in last_message.content):
+        if state.get("retry_count", 0) < 3:
+            return "agent"
+    
     return "final_answer"
 
 
