@@ -20,15 +20,12 @@ async def run_chat_logic(user_input):
             version="v2"
         ):
             kind = event["event"]
-            
             metadata = event.get("metadata", {})
             node_name = metadata.get("langgraph_node", "")
-
             if kind == "on_tool_start":
                 tool_name = event['name']
                 if tool_name not in ["__start__", "__end__"]:
                     status_container.write(f"Đang dùng công cụ: **{tool_name}**...")
-            
             elif kind == "on_tool_end":
                 tool_name = event['name']
                 if tool_name not in ["__start__", "__end__"]:
@@ -36,16 +33,28 @@ async def run_chat_logic(user_input):
                     
                     if tool_name == "python_chart_maker":
                         st.image("static/chart_output.png", caption="Biểu đồ phân tích")
-
             elif kind == "on_chat_model_stream":
                 if node_name in ["final_answer", "general_chat"]:
                     content = event["data"]["chunk"].content
                     if content:
                         full_response += content
                         answer_placeholder.markdown(full_response + "▌")
-
             elif kind == "on_chain_end":
-                if node_name == "agent_router" and event["name"] == "agent_router":
+                if node_name == "input_guardrail" and event["name"] == "input_guardrail":
+                    output = event["data"].get("output")
+                    if output and not isinstance(output, str):
+                        if isinstance(output, dict):
+                            is_safe = output.get("is_safe", True)
+                            reasoning = output.get("reasoning", "Không có lý do")
+                        else:
+                            is_safe = getattr(output, 'is_safe', True)
+                            reasoning = getattr(output, 'reasoning', "Không có lý do")
+                        label = "An toàn" if is_safe else "Cảnh báo Bảo mật"
+                        color = "green" if is_safe else "red"
+                        status_container.write(f"**Kiểm duyệt đầu vào:** Đã kiểm duyệt - :{color}[{label}]")
+                        status_container.write(f"**Lý do:** {reasoning}")
+                        status_container.write("---")
+                elif node_name == "agent_router" and event["name"] == "agent_router":
                     output = event["data"].get("output")
                     if output and not isinstance(output, str):
                         try:
@@ -55,7 +64,6 @@ async def run_chat_logic(user_input):
                             if is_out is None and isinstance(output, dict):
                                 is_out = output.get("is_out_of_scope")
                                 reasoning = output.get("reasoning", "Không có lý do")
-
                             if is_out is not None:
                                 status_label = "Ngoài phạm vi" if is_out else "Trong phạm vi"
                                 color = "orange" if is_out else "green"
@@ -65,6 +73,8 @@ async def run_chat_logic(user_input):
                                 status_container.write("---")
                         except Exception as e:
                             print(f"Lỗi hiển thị log: {e}")
+                elif node_name == "output_guardrail":
+                    status_container.write("**Kiểm duyệt đầu ra:** Dữ liệu nhạy cảm đã được lọc.")
             
         status_container.update(label="Hoàn thành!", state="complete", expanded=False)
         answer_placeholder.markdown(full_response)
