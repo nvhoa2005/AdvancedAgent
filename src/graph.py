@@ -27,6 +27,8 @@ class AgentState(TypedDict):
     messages: Annotated[Sequence[BaseMessage], add_messages]
     is_out_of_scope: bool
     retry_count: int
+    reasoning: str
+    is_safe: bool
 
 
 class RouteResponse(BaseModel):
@@ -199,14 +201,18 @@ def agent_node(state: AgentState):
 
 
 def general_chat_node(state: AgentState):
-    """Xử lý các câu hỏi ngoài phạm vi hệ thống"""
+    """Xử lý các câu hỏi ngoài phạm vi HOẶC bị Guardrail chặn"""
 
     messages = state["messages"]
+    reasoning = state.get("reasoning", "")
 
     general_prompt = SystemMessage(
-        content="""
+        content=f"""
     Bạn là một trợ lý ảo thông minh và vui vẻ. 
     Người dùng đang hỏi một câu hỏi ngoài phạm vi dữ liệu của công ty.
+    Nếu như tôi cung cấp cho bạn lý do tại sao câu hỏi này không thuộc phạm vi, hãy sử dụng lý do đó để giúp bạn trả lời người dùng một cách lịch sự và thân thiện.
+    Reasoning: {reasoning}
+    Nếu như tôi không cung cấp lý do, hãy trả lời một cách chung chung và vui vẻ.
     Còn đây là các Tool mà bạn có thể trả lời nếu người dùng hỏi bạn có thể giúp được gì:
     1. query_sql_db: Lấy số liệu từ DB.
     2. search_policy_docs: Tra cứu chính sách.
