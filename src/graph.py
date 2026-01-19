@@ -81,6 +81,7 @@ def get_system_message():
     - Nếu cần thông tin -> Gọi Tool.
     - Khi đã có kết quả từ Tool -> Hãy trả về thông tin dưới dạng **GẠCH ĐẦU DÒNG (Bullet points)** thô.
     - CHỈ TRẢ VỀ DỮ LIỆU. KHÔNG viết lời chào, KHÔNG viết câu dẫn, KHÔNG viết kết luận.
+    - ĐẶC BIỆT: Nếu Tool trả về thông tin NGUỒN (ví dụ: Trang X), bạn BẮT BUỘC phải giữ lại thông tin đó trong gạch đầu dòng.
     - Ví dụ output mong muốn:
       * Doanh thu: 1000 USD
       * Số đơn: 50
@@ -141,7 +142,7 @@ def agent_router_node(state: AgentState):
             (
                 "system",
                 f"""Bạn là chuyên gia phân loại yêu cầu cho hệ thống AI Doanh nghiệp. 
-        HÔM NAY LÀ: {today}.
+        HÔM NAY LÀ: {today}. LƯU Ý: CÁC CÂU HỎI VỀ QUÁ KHỨ VÀ CÓ TRONG DANH MỤC Ở DƯỚI THÌ ĐƯỢC XEM LÀ TRONG PHẠM VI.
 
         NHIỆM VỤ:
         Dựa vào ngữ cảnh và ĐẶC BIỆT chú ý đến câu hỏi cuối cùng của người dùng để quyết định xem nó có thể được giải quyết bằng các công cụ dữ liệu nội bộ hay không.
@@ -150,7 +151,6 @@ def agent_router_node(state: AgentState):
         - Mọi câu hỏi về doanh thu, đơn hàng, khách hàng, tồn kho, sản phẩm (Sử dụng SQL).
         - Mọi yêu cầu về quy định, chính sách công ty, phúc lợi, lương thưởng (Sử dụng RAG).
         - Yêu cầu vẽ biểu đồ, tính toán tỷ lệ tăng trưởng (Sử dụng Python).
-        - LƯU Ý: Vì hiện nay là 2026, nên các câu hỏi về năm 2025 là DỮ LIỆU QUÁ KHỨ, hoàn toàn nằm trong phạm vi.
 
         DANH MỤC NGOÀI PHẠM VI (is_out_of_scope = True):
         - Chào hỏi xã giao (Hi, Hello), khen ngợi/chê bai không liên quan công việc.
@@ -226,19 +226,21 @@ def general_chat_node(state: AgentState):
 
 
 def final_answer_node(state: AgentState):
-    """Viết câu trả lời cuối cùng"""
+    """Viết câu trả lời cuối cùng có kèm theo trích dẫn"""
     messages = state["messages"]
 
     final_system_prompt = SystemMessage(
         content="""
     Bạn là Chuyên viên Chăm sóc Khách hàng chuyên nghiệp.
-    Nhiệm vụ: Dựa trên các dữ liệu thô (gạch đầu dòng) mà hệ thống cung cấp ở trên, hãy VIẾT LẠI thành một câu trả lời hoàn chỉnh, tự nhiên cho người dùng.
+    Nhiệm vụ: Dựa trên các dữ liệu thô (gạch đầu dòng) và thông tin về NGUỒN (số trang) mà hệ thống cung cấp ở trên, hãy VIẾT LẠI thành một câu trả lời hoàn chỉnh, tự nhiên cho người dùng.
     
     YÊU CẦU:
     1. KHÔNG được lặp lại nguyên văn các gạch đầu dòng. Hãy diễn giải thành lời văn.
     2. Nếu dữ liệu là con số, hãy làm tròn hoặc định dạng cho dễ đọc (ví dụ: 122,873.49 -> 122,873 USD).
     3. Văn phong lịch sự, thân thiện.
     4. Chỉ trả lời đúng trọng tâm câu hỏi.
+    5. TRÍCH DẪN NGUỒN: Mỗi khi bạn sử dụng thông tin từ tài liệu chính sách, bạn BẮT BUỘC phải ghi nguồn ở cuối câu/đoạn đó dưới dạng [Trang X].
+    - Ví dụ: "Nhân viên được nghỉ phép 12 ngày mỗi năm [Trang 5]."
     """
     )
 
