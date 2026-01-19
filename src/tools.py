@@ -55,12 +55,18 @@ def search_policy_docs(query: str) -> str:
     Công cụ tìm kiếm thông tin trong tài liệu chính sách công ty (PDF).
     Sử dụng khi người dùng hỏi về: lương, thưởng, nghỉ phép, quy định, phúc lợi...
     Input: Từ khóa hoặc câu hỏi tìm kiếm.
-    Output: Các đoạn văn bản liên quan nhất.
+    Output: Các đoạn văn bản liên quan nhất và kèm số trang.
     """
     print(f"[RAG Tool] Searching: {query}")
     docs = vector_store.similarity_search(query, k=4)
     
-    context = "\n\n".join([d.page_content for d in docs])
+    results = []
+    for d in docs:
+        page_num = d.metadata.get("page", 0) + 1
+        source_text = d.page_content
+        results.append(f"--- NỘI DUNG ---\n{source_text}\n--- NGUỒN: Trang {page_num} ---\n")
+    
+    context = "\n".join(results)
     return context if context else "Không tìm thấy thông tin trong tài liệu."
 
 @tool
