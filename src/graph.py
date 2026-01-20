@@ -29,6 +29,7 @@ class AgentState(TypedDict):
     retry_count: int
     reasoning: str
     is_safe: bool
+    transformed_query: str
 
 
 class RouteResponse(BaseModel):
@@ -128,6 +129,35 @@ def output_guardrail_node(state: AgentState):
     response = llm_writer.invoke(prompt)
     return {"messages": [response]}
 
+def query_transform_node(state: AgentState):
+    """Viết lại câu hỏi của người dùng để tối ưu cho tìm kiếm SQL/RAG"""
+    messages = state["messages"]
+    last_user_message = messages[-1].content
+    
+    today = datetime.now().strftime("%d/%m/%Y")
+    
+    prompt = f"""Bạn là chuyên gia tối ưu hóa truy vấn AI. 
+    Nhiệm vụ: Dựa vào ngữ cảnh và ĐẶC BIỆT chú ý đến câu hỏi của người dùng và viết lại câu hỏi của người dùng để nó trở nên rõ ràng, chi tiết và dễ dàng cho việc truy vấn SQL hoặc tìm kiếm RAG.
+    
+    Dữ liệu đầu vào:
+    - Ngày hiện tại: {today}
+    - Câu hỏi gốc: "{last_user_message}"
+    - Ngữ cảnh hội thoại: {" ".join([msg.content for msg in messages[:-1]])}
+    
+    Yêu cầu:
+    1. Nếu hỏi về thời gian (tháng này, quý này), hãy chuyển thành mốc thời gian cụ thể (tháng 1/2026).
+    2. Nếu hỏi về RAG (chính sách), hãy mở rộng các từ khóa liên quan (ví dụ: 'nghỉ phép' -> 'quy định về nghỉ phép, chế độ nghỉ phép năm').
+    3. Trả về DUY NHẤT câu hỏi đã được tối ưu, không giải thích gì thêm.
+    """
+    
+    transformed = llm.invoke(prompt)
+    print("--- [QUERY TRANSFORM] ---")
+    print(f"Gốc: {last_user_message}")
+    print(f"Mới: {transformed.content}")
+    print("--------------------------")
+    
+    return {"transformed_query": transformed.content}
+
 def agent_router_node(state: AgentState):
     """Node này thực hiện phân loại và lưu kết quả vào State"""
     messages = state["messages"]
@@ -183,7 +213,7 @@ def route_after_classification(state: AgentState):
     """Hàm này đóng vai trò làm ngã rẽ dựa trên State đã có"""
     if state.get("is_out_of_scope"):
         return "general_chat"
-    return "agent"
+    return "query_transform"
 
 
 def agent_node(state: AgentState):
@@ -276,13 +306,17 @@ workflow.add_node("final_answer", final_answer_node)
 workflow.add_node("general_chat", general_chat_node)
 workflow.add_node("input_guardrail", input_guardrail_node)
 workflow.add_node("output_guardrail", output_guardrail_node)
+workflow.add_node("query_transform", query_transform_node)
 
 workflow.add_edge(START, "input_guardrail")
 
 workflow.add_conditional_edges(
     "agent_router",
     route_after_classification,
-    {"general_chat": "general_chat", "agent": "agent"},
+    {
+        "general_chat": "general_chat", 
+        "query_transform": "query_transform"
+    },
 )
 
 workflow.add_conditional_edges(
@@ -297,6 +331,7 @@ workflow.add_conditional_edges(
     {"general_chat": "general_chat", "agent_router": "agent_router"}
 )
 
+workflow.add_edge("query_transform", "agent")
 workflow.add_edge("tools", "agent")
 workflow.add_edge("final_answer", "output_guardrail")
 workflow.add_edge("general_chat", "output_guardrail")
