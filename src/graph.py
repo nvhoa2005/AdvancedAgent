@@ -50,7 +50,7 @@ tools = [query_sql_db, search_policy_docs, python_chart_maker]
 
 llm = ChatOpenAI(model="gpt-4o-mini", temperature=0, streaming=True)
 llm_with_tools = llm.bind_tools(tools)
-llm_writer = ChatOpenAI(model="gpt-4o-mini", temperature=0.5, streaming=True)
+llm_writer = ChatOpenAI(model="gpt-4o-mini", temperature=0.2, streaming=True)
 
 memory = MemorySaver()
 
