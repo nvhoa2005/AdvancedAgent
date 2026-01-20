@@ -7,14 +7,21 @@ from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_postgres import PGVector
 from langchain_experimental.utilities import PythonREPL
+import cohere
 
 load_dotenv()
 
 db_uri = os.getenv("DATABASE_URL")
+cohere_api_key = os.getenv("COHERE_API_KEY")
+
 if not db_uri:
     raise ValueError("Chưa cấu hình DATABASE_URL trong file .env")
 
+if not cohere_api_key:
+    raise ValueError("Chưa cấu hình COHERE_API_KEY trong file .env")
+
 db = SQLDatabase.from_uri(db_uri)
+co = cohere.Client(cohere_api_key)
 
 embeddings = OpenAIEmbeddings(model="text-embedding-3-small")
 vector_store = PGVector(
@@ -54,20 +61,28 @@ def search_policy_docs(query: str) -> str:
     """
     Công cụ tìm kiếm thông tin trong tài liệu chính sách công ty (PDF).
     Sử dụng khi người dùng hỏi về: lương, thưởng, nghỉ phép, quy định, phúc lợi...
+    Sử dụng kỹ thuật Re-ranking để đạt độ chính xác cao nhất.
     Input: Từ khóa hoặc câu hỏi tìm kiếm.
     Output: Các đoạn văn bản liên quan nhất và kèm số trang.
     """
     print(f"[RAG Tool] Searching: {query}")
-    docs = vector_store.similarity_search(query, k=4)
+    initial_docs = vector_store.similarity_search(query, k=5)
     
-    results = []
-    for d in docs:
-        page_num = d.metadata.get("page", 0) + 1
-        source_text = d.page_content
-        results.append(f"--- NỘI DUNG ---\n{source_text}\n--- NGUỒN: Trang {page_num} ---\n")
+    doc_contents = [d.page_content for d in initial_docs]
+    rerank_results = co.rerank(
+        query=query, 
+        documents=doc_contents, 
+        top_n=3, 
+        model="rerank-v3.5"
+    )
     
-    context = "\n".join(results)
-    return context if context else "Không tìm thấy thông tin trong tài liệu."
+    formatted_results = []
+    for res in rerank_results.results:
+        original_doc = initial_docs[res.index]
+        page_num = original_doc.metadata.get("page", 0) + 1
+        formatted_results.append(f"--- NỘI DUNG ---\n{original_doc.page_content}\n--- NGUỒN: Trang {page_num} ---\n")
+        
+    return "\n".join(formatted_results)
 
 @tool
 def python_chart_maker(code: str) -> str:
