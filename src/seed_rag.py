@@ -37,11 +37,8 @@ def ingest_docs():
     loader = PyMuPDFLoader(pdf_path)
     documents = loader.load()
     
-    full_text = ""
     for doc in documents:
-        cleaned_page = advanced_clean_text(doc.page_content)
-        full_text += cleaned_page + "\n\n" 
-    print(f"   -> Tổng dung lượng văn bản sạch: {len(full_text)} ký tự.")
+        doc.page_content = advanced_clean_text(doc.page_content)
 
     text_splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000, 
@@ -57,7 +54,7 @@ def ingest_docs():
         ]
     )
     
-    chunks = text_splitter.create_documents([full_text])
+    chunks = text_splitter.split_documents(documents)
     print(f"Đã cắt thành {len(chunks)} đoạn (chunks) chất lượng cao.")
     
     with open("debug_chunks_clean.txt", "w", encoding="utf-8") as f:
