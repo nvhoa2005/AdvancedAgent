@@ -80,7 +80,8 @@ def search_policy_docs(query: str) -> str:
     for res in rerank_results.results:
         original_doc = initial_docs[res.index]
         page_num = original_doc.metadata.get("page", 0) + 1
-        formatted_results.append(f"--- NỘI DUNG ---\n{original_doc.page_content}\n--- NGUỒN: Trang {page_num} ---\n")
+        chunk_text = f"[NGUỒN: TRANG {page_num}]\n{original_doc.page_content}\n"
+        formatted_results.append(chunk_text)
         
     return "\n".join(formatted_results)
 
