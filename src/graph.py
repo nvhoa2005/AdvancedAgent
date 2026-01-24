@@ -219,6 +219,13 @@ def route_after_classification(state: AgentState):
 def agent_node(state: AgentState):
     """Hàm này gọi tool và trả về dữ liệu thô"""
     messages = state["messages"]
+    
+    if state.get("transformed_query"):
+        for i in range(len(messages) - 1, -1, -1):
+            if isinstance(messages[i], HumanMessage):
+                messages[i] = HumanMessage(content=state["transformed_query"])
+                break
+    
     if "retry_count" not in state:
         state["retry_count"] = 0
         
