@@ -26,11 +26,15 @@ async def run_chat_logic(user_input):
                 tool_name = event['name']
                 if tool_name not in ["__start__", "__end__"]:
                     status_container.write(f"Đang dùng công cụ: **{tool_name}**...")
+                    if tool_name == "query_sql_db":
+                        sql_query = event.get("data", {}).get("input", {}).get("query")
+                        if sql_query:
+                            with status_container.expander("Xem câu lệnh SQL thực thi"):
+                                st.code(sql_query, language="sql")
             elif kind == "on_tool_end":
                 tool_name = event['name']
                 if tool_name not in ["__start__", "__end__"]:
                     status_container.write(f"**{tool_name}** xong.")
-                    
                     if tool_name == "python_chart_maker":
                         st.image("static/chart_output.png", caption="Biểu đồ phân tích")
             elif kind == "on_chat_model_stream":
@@ -73,8 +77,15 @@ async def run_chat_logic(user_input):
                                 status_container.write("---")
                         except Exception as e:
                             print(f"Lỗi hiển thị log: {e}")
-                elif node_name == "output_guardrail":
+                elif node_name == "output_guardrail" and event["name"] == "output_guardrail":
                     status_container.write("**Kiểm duyệt đầu ra:** Dữ liệu nhạy cảm đã được lọc.")
+                elif node_name == "query_transform" and event["name"] == "query_transform":
+                    output = event["data"].get("output")
+                    if output and isinstance(output, dict):
+                        transformed = output.get("transformed_query")
+                        if transformed:
+                            status_container.write(f"**Tối ưu câu hỏi:** _{transformed}_")
+                            status_container.write("---")
             
         status_container.update(label="Hoàn thành!", state="complete", expanded=False)
         answer_placeholder.markdown(full_response)
