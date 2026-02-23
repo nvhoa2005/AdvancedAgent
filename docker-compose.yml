@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Phần Database (PostgreSQL + Pgvector)
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: insight_agent_db
+    restart: always
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: insight_db
+    ports:
+      - "5432:5432" 
+    volumes:
+      - postgres_data:/var/lib/postgresql/data 
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d insight_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # Phần App (Streamlit)
+  app:
+    build: .           
+    container_name: insight_agent_app
+    ports:
+      - "8501:8501"      
+    depends_on:
+      db:
+        condition: service_healthy  
+    env_file:
+      - .env            
+    environment:
+      - DATABASE_URL=postgresql+psycopg://user:password@db:5432/insight_db
+    volumes:
+      - .:/app           
+
+volumes:
+  postgres_data:
