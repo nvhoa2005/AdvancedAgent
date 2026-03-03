@@ -1,17 +1,40 @@
 import streamlit as st
 import asyncio
 from langchain_core.messages import HumanMessage
+from langchain_openai import ChatOpenAI
+from config.settings import settings
+from tools import sql_service, rag_service, python_service
+from agent import AgentNodes, InsightAgentWorkflow
 
-from src.graph import app as graph_app 
+st.set_page_config(page_title="Insight Agent Enterprise", layout="wide")
 
-st.set_page_config(page_title="Advanced Agent", layout="wide")
+@st.cache_resource
+def init_agent_app():
+    """
+    Khởi tạo toàn bộ hệ thống Agent
+    """
+    llm = ChatOpenAI(model=settings.LLM_MODEL, temperature=settings.LLM_TEMPERATURE, streaming=True)
+    llm_writer = ChatOpenAI(model=settings.LLM_MODEL, temperature=settings.WRITER_TEMPERATURE, streaming=True)
+    
+    tools = [
+        sql_service.get_tool(), 
+        rag_service.get_tool(), 
+        python_service.get_tool()
+    ]
+    
+    db_schema = sql_service.get_db_schema()
+    
+    nodes = AgentNodes(llm=llm, llm_writer=llm_writer, tools=tools, db_schema=db_schema)
+    workflow = InsightAgentWorkflow(nodes=nodes, tools=tools)
+    return workflow.compile()
+
+graph_app = init_agent_app()
 
 async def run_chat_logic(user_input):
     with st.chat_message("assistant"):
-        status_container = st.status("Đang xử lý...", expanded=True)
+        status_container = st.status("Đang phân tích yêu cầu...", expanded=True)
         answer_placeholder = st.empty()
         full_response = ""
-        
         config = {"configurable": {"thread_id": "1"}}
         
         async for event in graph_app.astream_events(
@@ -22,6 +45,7 @@ async def run_chat_logic(user_input):
             kind = event["event"]
             metadata = event.get("metadata", {})
             node_name = metadata.get("langgraph_node", "")
+            
             if kind == "on_tool_start":
                 tool_name = event['name']
                 if tool_name not in ["__start__", "__end__"]:
@@ -87,17 +111,12 @@ async def run_chat_logic(user_input):
                             status_container.write(f"**Tối ưu câu hỏi:** _{transformed}_")
                             status_container.write("---")
             
-        status_container.update(label="Hoàn thành!", state="complete", expanded=False)
+        status_container.update(label="Hoàn thành xử lý!", state="complete", expanded=False)
         answer_placeholder.markdown(full_response)
         st.session_state.messages.append({"role": "assistant", "content": full_response})
-        
-        print("\n" + "="*30 + " LỊCH SỬ CHAT " + "="*30)
-        for msg in st.session_state.messages:
-            role = "NGƯỜI DÙNG" if msg["role"] == "user" else "CHATBOT"
-            print(f"[{role}]: {msg['content']}")
-        print("="*73 + "\n")
 
-st.title("Advanced AI Agent (SQL + RAG + Python)")
+st.title("🤖 Insight Agent Enterprise (SQL + RAG + Python)")
+st.markdown("Hệ thống trợ lý ảo phân tích dữ liệu đa luồng.")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
