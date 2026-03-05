@@ -3,7 +3,7 @@ import asyncio
 from langchain_core.messages import HumanMessage
 from langchain_openai import ChatOpenAI
 from config.settings import settings
-from tools import sql_service, rag_service, python_service
+from tools import sql_service, insight_tools
 from agent import AgentNodes, InsightAgentWorkflow
 
 st.set_page_config(page_title="Insight Agent Enterprise", layout="wide")
@@ -16,11 +16,7 @@ def init_agent_app():
     llm = ChatOpenAI(model=settings.LLM_MODEL, temperature=settings.LLM_TEMPERATURE, streaming=True)
     llm_writer = ChatOpenAI(model=settings.LLM_MODEL, temperature=settings.WRITER_TEMPERATURE, streaming=True)
     
-    tools = [
-        sql_service.get_tool(), 
-        rag_service.get_tool(), 
-        python_service.get_tool()
-    ]
+    tools = insight_tools
     
     db_schema = sql_service.get_db_schema()
     
