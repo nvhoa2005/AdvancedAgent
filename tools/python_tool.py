@@ -1,8 +1,9 @@
 import os
 from langchain_experimental.utilities import PythonREPL
 from langchain_core.tools import StructuredTool
+from .base_tool import BaseToolService
 
-class PythonChartService:
+class PythonChartService(BaseToolService):
     def __init__(self, save_dir: str = "static"):
         self.save_dir = save_dir
         os.makedirs(self.save_dir, exist_ok=True)

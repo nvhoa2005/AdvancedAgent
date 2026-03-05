@@ -3,8 +3,9 @@ from langchain_openai import OpenAIEmbeddings
 from langchain_postgres import PGVector
 from langchain_core.tools import StructuredTool
 from config.settings import settings
+from .base_tool import BaseToolService
 
-class PolicyRAGService:
+class PolicyRAGService(BaseToolService):
     def __init__(self):
         self.embeddings = OpenAIEmbeddings(model=settings.EMBEDDING_MODEL)
         self.vector_store = PGVector(

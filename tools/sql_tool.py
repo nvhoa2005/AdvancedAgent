@@ -1,8 +1,9 @@
 from langchain_community.utilities import SQLDatabase
 from langchain_core.tools import StructuredTool
 from config.settings import settings
+from .base_tool import BaseToolService
 
-class SQLDatabaseService:
+class SQLDatabaseService(BaseToolService):
     def __init__(self):
         self.db = SQLDatabase.from_uri(settings.DATABASE_URL)
 
