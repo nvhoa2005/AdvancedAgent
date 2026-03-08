@@ -1,0 +1,107 @@
+[
+  {
+    "id": "chart_001",
+    "question": "Vẽ biểu đồ đường (line chart) thể hiện sự tăng trưởng số lượng khách hàng mới đăng ký (signup_date) qua từng năm.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "easy"
+  },
+  {
+    "id": "chart_002",
+    "question": "Vẽ biểu đồ tròn (pie chart) cho thấy tỷ lệ phân bổ của các sản phẩm theo từng danh mục (category).",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "easy"
+  },
+  {
+    "id": "chart_003",
+    "question": "Hãy vẽ biểu đồ đường (line chart) thể hiện xu hướng số lượng đơn hàng được đặt theo thời gian (theo các tháng).",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  },
+  {
+    "id": "chart_004",
+    "question": "Trực quan hóa top 5 sản phẩm có giá bán (price) cao nhất bằng biểu đồ thanh ngang (horizontal bar chart).",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "easy"
+  },
+  {
+    "id": "chart_005",
+    "question": "Hãy vẽ biểu đồ phân tán (scatter plot) để xem mối tương quan giữa giá bán (price) và giá vốn (cost) của toàn bộ sản phẩm.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  },
+  {
+    "id": "chart_006",
+    "question": "Vẽ biểu đồ cột thể hiện tổng doanh thu đạt được tương ứng với từng trạng thái của đơn hàng (Pending, Completed, Cancelled).",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  },
+  {
+    "id": "chart_007",
+    "question": "Tạo biểu đồ so sánh tổng số lượng hàng tồn kho (stock_quantity) của 3 danh mục: Electronics, Clothing và Home.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  },
+  {
+    "id": "chart_008",
+    "question": "Vẽ biểu đồ cột chồng (stacked bar chart) thể hiện số lượng đơn hàng Completed và Cancelled trong cùng một biểu đồ theo từng tháng.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "hard"
+  },
+  {
+    "id": "chart_009",
+    "question": "Hãy vẽ biểu đồ thể hiện tổng giá trị mua hàng của top 10 khách hàng chi tiêu nhiều nhất.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  },
+  {
+    "id": "chart_010",
+    "question": "Vẽ biểu đồ tỷ lệ phần trăm (pie chart) thể hiện mức đóng góp doanh thu của từng danh mục sản phẩm vào tổng doanh thu toàn hệ thống.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "hard"
+  },
+  {
+    "id": "chart_011",
+    "question": "Hãy hiển thị biểu đồ hộp (boxplot) để phân tích sự phân bố giá bán của các sản phẩm theo từng danh mục.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "hard"
+  },
+  {
+    "id": "chart_012",
+    "question": "Vẽ biểu đồ thể hiện top 5 nhà cung cấp (supplier) có số lượng sản phẩm cung cấp đa dạng nhất.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  },
+  {
+    "id": "chart_013",
+    "question": "Trực quan hóa tổng lợi nhuận ước tính (tính bằng: (price - cost) * stock_quantity) của từng danh mục sản phẩm bằng một biểu đồ cột.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "hard"
+  },
+  {
+    "id": "chart_014",
+    "question": "Vẽ biểu đồ đường (line chart) thể hiện sự tăng trưởng số lượng khách hàng mới đăng ký (signup_date) qua từng năm.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  },
+  {
+    "id": "chart_015",
+    "question": "Hãy vẽ biểu đồ phân phối tần suất (histogram) cho giá trị của các đơn hàng (total_amount) để xem các khoảng giá trị nào xuất hiện nhiều nhất.",
+    "expected_tool": "python_chart_maker",
+    "evaluation_criteria": "SUCCESSS_CHART_SAVED",
+    "complexity": "medium"
+  }
+]
