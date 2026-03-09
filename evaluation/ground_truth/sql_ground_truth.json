@@ -1,0 +1,212 @@
+[
+  {
+    "id": "sql_001",
+    "question": "Hệ thống hiện tại có tổng cộng bao nhiêu khách hàng?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT COUNT(*) FROM customers",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_002",
+    "question": "Có bao nhiêu sản phẩm thuộc danh mục 'Electronics'?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT COUNT(*) FROM products WHERE category = 'Electronics'",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_003",
+    "question": "Hệ thống đang có bao nhiêu đơn hàng ở trạng thái 'Pending'?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT COUNT(*) FROM orders WHERE status = 'Pending'",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_004",
+    "question": "Tổng doanh thu của tất cả các đơn hàng đã hoàn thành (Completed) là bao nhiêu?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT SUM(total_amount) FROM orders WHERE status = 'Completed'",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_005",
+    "question": "Hệ thống đang có bao nhiêu đơn hàng ở trạng thái 'Cancelled'?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT COUNT(*) FROM orders WHERE status = 'Cancelled'",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_006",
+    "question": "Cho tôi biết tên và giá của 5 sản phẩm có giá bán (price) cao nhất.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT name, price FROM products ORDER BY price DESC LIMIT 5",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_007",
+    "question": "Đếm số lượng đơn hàng theo từng trạng thái (status).",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT status, COUNT(*) FROM orders GROUP BY status",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_008",
+    "question": "Mỗi danh mục sản phẩm (category) hiện có bao nhiêu mặt hàng?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT category, COUNT(*) FROM products GROUP BY category",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_009",
+    "question": "Liệt kê 5 thành phố có số lượng khách hàng đông nhất.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT city, COUNT(customer_id) as customer_count FROM customers GROUP BY city ORDER BY customer_count DESC LIMIT 5",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_010",
+    "question": "Giá bán trung bình của các sản phẩm theo từng danh mục là bao nhiêu?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT category, AVG(price) FROM products GROUP BY category",
+    "complexity": "easy"
+  },
+  {
+    "id": "sql_011",
+    "question": "Lấy tên và số lượng tồn kho của 5 sản phẩm đang có số lượng tồn kho (stock_quantity) thấp nhất.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT p.name, i.stock_quantity FROM products p JOIN inventory i ON p.product_id = i.product_id ORDER BY i.stock_quantity ASC LIMIT 5",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_012",
+    "question": "Tổng số lượng hàng tồn kho của tất cả các sản phẩm thuộc danh mục 'Clothing' là bao nhiêu?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT SUM(i.stock_quantity) FROM products p JOIN inventory i ON p.product_id = i.product_id WHERE p.category = 'Clothing'",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_013",
+    "question": "Tìm 5 khách hàng có tổng giá trị đơn hàng (chỉ tính đơn Completed) lớn nhất từ trước đến nay.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT c.name, SUM(o.total_amount) as total_spent FROM customers c JOIN orders o ON c.customer_id = o.customer_id WHERE o.status = 'Completed' GROUP BY c.customer_id ORDER BY total_spent DESC LIMIT 5",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_014",
+    "question": "Danh mục sản phẩm nào mang lại tổng doanh thu cao nhất (dựa trên các đơn hàng Completed)?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT p.category, SUM(oi.quantity * oi.unit_price) as total_revenue FROM products p JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id WHERE o.status = 'Completed' GROUP BY p.category ORDER BY total_revenue DESC LIMIT 1",
+    "complexity": "hard"
+  },
+  {
+    "id": "sql_015",
+    "question": "Danh sách 3 khách hàng có số lượng đơn hàng nhiều nhất.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT c.name, COUNT(o.order_id) as total_orders FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id ORDER BY total_orders DESC LIMIT 3",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_016",
+    "question": "Liệt kê tên 5 sản phẩm bán chạy nhất (dựa trên tổng số lượng đã bán trong các đơn Completed).",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT p.name, SUM(oi.quantity) as total_sold FROM products p JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id WHERE o.status = 'Completed' GROUP BY p.product_id ORDER BY total_sold DESC LIMIT 5",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_017",
+    "question": "Trung bình một đơn hàng đã hoàn thành (Completed) có giá trị là bao nhiêu?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT AVG(total_amount) FROM orders WHERE status = 'Completed'",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_018",
+    "question": "Liệt kê top 3 nhà cung cấp (supplier) cung cấp nhiều mặt hàng khác nhau nhất.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT supplier, COUNT(*) as product_count FROM products GROUP BY supplier ORDER BY product_count DESC LIMIT 3",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_019",
+    "question": "Tính tổng lợi nhuận ước tính (giá bán trừ chi phí, nhân với số lượng tồn kho) của top 5 sản phẩm sinh lời cao nhất trong kho.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT p.name, SUM(i.stock_quantity * (p.price - p.cost)) as estimated_profit FROM products p JOIN inventory i ON p.product_id = i.product_id GROUP BY p.product_id ORDER BY estimated_profit DESC LIMIT 5",
+    "complexity": "hard"
+  },
+  {
+    "id": "sql_020",
+    "question": "Có bao nhiêu khách hàng chưa từng đặt bất kỳ đơn hàng nào?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT COUNT(c.customer_id) FROM customers c LEFT JOIN orders o ON c.customer_id = o.customer_id WHERE o.order_id IS NULL",
+    "complexity": "hard"
+  },
+  {
+    "id": "sql_021",
+    "question": "Khách hàng có mã customer_id = 1 đã chi tổng cộng bao nhiêu tiền cho các đơn hàng hoàn thành?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT SUM(total_amount) FROM orders WHERE customer_id = 1 AND status = 'Completed'",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_022",
+    "question": "Liệt kê tên các sản phẩm nằm trong đơn hàng có giá trị cao nhất hệ thống.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT p.name FROM order_items oi JOIN products p ON oi.product_id = p.product_id WHERE oi.order_id = (SELECT order_id FROM orders ORDER BY total_amount DESC LIMIT 1)",
+    "complexity": "hard"
+  },
+  {
+    "id": "sql_023",
+    "question": "Có tổng cộng bao nhiêu khách hàng duy nhất đã từng mua hàng (có tạo đơn hàng)?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT COUNT(DISTINCT customer_id) FROM orders",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_024",
+    "question": "Sản phẩm nào có biên lợi nhuận (profit margin = price - cost) cao nhất?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT name, (price - cost) as profit_margin FROM products ORDER BY profit_margin DESC LIMIT 1",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_025",
+    "question": "Tìm 5 đơn hàng có chứa nhiều loại sản phẩm khác nhau nhất.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT o.order_id, COUNT(oi.item_id) as distinct_items FROM orders o JOIN order_items oi ON o.order_id = oi.order_id GROUP BY o.order_id ORDER BY distinct_items DESC LIMIT 5",
+    "complexity": "hard"
+  },
+  {
+    "id": "sql_026",
+    "question": "Đơn hàng gần đây nhất được đặt vào ngày nào và có tổng tiền là bao nhiêu?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT order_date, total_amount FROM orders ORDER BY order_date DESC LIMIT 1",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_027",
+    "question": "Khách hàng nào có một đơn hàng duy nhất với giá trị cao nhất?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT c.name, MAX(o.total_amount) as max_order FROM customers c JOIN orders o ON c.customer_id = o.customer_id GROUP BY c.customer_id ORDER BY max_order DESC LIMIT 1",
+    "complexity": "hard"
+  },
+  {
+    "id": "sql_028",
+    "question": "Hiện tại có sản phẩm nào đã bán hết (số lượng tồn kho bằng 0) không? Trả về tên sản phẩm.",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT p.name FROM products p JOIN inventory i ON p.product_id = i.product_id WHERE i.stock_quantity = 0",
+    "complexity": "medium"
+  },
+  {
+    "id": "sql_029",
+    "question": "Nhà cung cấp (supplier) nào có số lượng sản phẩm được bán ra nhiều nhất (chỉ tính đơn Completed)?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT p.supplier, SUM(oi.quantity) as total_sold FROM products p JOIN order_items oi ON p.product_id = oi.product_id JOIN orders o ON oi.order_id = o.order_id WHERE o.status = 'Completed' GROUP BY p.supplier ORDER BY total_sold DESC LIMIT 1",
+    "complexity": "hard"
+  },
+  {
+    "id": "sql_030",
+    "question": "Tổng số lượng sản phẩm mà khách hàng có mã customer_id = 5 đã mua là bao nhiêu?",
+    "expected_tool": "query_sql_db",
+    "expected_sql": "SELECT SUM(oi.quantity) FROM order_items oi JOIN orders o ON oi.order_id = o.order_id WHERE o.customer_id = 5 AND o.status = 'Completed'",
+    "complexity": "medium"
+  }
+]
