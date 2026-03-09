@@ -1,0 +1,72 @@
+[
+  {
+    "id": "multihop_001",
+    "question": "Tính tổng doanh thu của từng tháng trong hệ thống, sau đó vẽ biểu đồ đường (line chart) thể hiện xu hướng tăng giảm của doanh thu theo thời gian.",
+    "expected_tool": ["query_sql_db", "python_chart_maker"],
+    "evaluation_criteria": "Agent phải gọi SQL để nhóm tổng tiền theo tháng, sau đó truyền kết quả vào tool Python để vẽ biểu đồ và lưu thành công.",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_002",
+    "question": "Một nhân viên nữ đã làm việc ở công ty được 6 năm, ký hợp đồng vô thời hạn và đang có một bé 2 tuổi. Mỗi ngày cô ấy làm việc bao nhiêu tiếng, có bao nhiêu ngày phép một năm và nhận được tổng cộng bao nhiêu tiền trợ cấp mỗi tháng cho em bé?",
+    "expected_tool": "search_policy_docs",
+    "evaluation_criteria": "Agent phải tổng hợp được 3 thông tin: 1) Làm 7 tiếng/ngày (nữ >3 năm). 2) 13 ngày phép (12 ngày cơ bản + 1 ngày do thâm niên >5 năm). 3) 500,000 VNĐ/tháng (trợ cấp con <3 tuổi).",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_003",
+    "question": "Lấy danh sách top 5 sản phẩm bán chạy nhất (dựa trên tổng số lượng đã bán của các đơn Completed) và vẽ biểu đồ cột cho chúng.",
+    "expected_tool": ["query_sql_db", "python_chart_maker"],
+    "evaluation_criteria": "Agent gọi SQL dùng JOIN + GROUP BY + ORDER BY + LIMIT 5. Sau đó đưa data vào python_chart_maker để vẽ biểu đồ cột.",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_004",
+    "question": "Tính tổng giá trị trung bình của cột 'revenue' trong bảng orders.",
+    "expected_tool": "query_sql_db",
+    "evaluation_criteria": "Bẫy tự sửa lỗi: Bảng orders không có cột 'revenue'. Agent sẽ bị lỗi ở lần 1, phải tự đọc schema và hiểu cần dùng cột 'total_amount', sau đó gọi lại tool thành công.",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_005",
+    "question": "Hai nhân viên A và B cùng rủ nhau thi đạt chứng chỉ PMP. Nhân viên A làm việc được 6 năm, nhân viên B làm việc được 2 năm. Hỏi tổng số tiền trợ cấp chứng chỉ và tổng số ngày phép năm của CẢ HAI người cộng lại là bao nhiêu?",
+    "expected_tool": "search_policy_docs",
+    "evaluation_criteria": "Toán học + RAG: Trợ cấp PMP (1tr * 2 = 2tr). Ngày phép A (13 ngày) + Ngày phép B (12 ngày) = 25 ngày.",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_006",
+    "question": "Hãy tìm tên của khách hàng đã chi tiêu nhiều tiền nhất hệ thống (đơn Completed). Sau đó, hãy cho tôi biết quy định thưởng giới thiệu dự án tối đa là bao nhiêu phần trăm, và nếu tôi là nhân viên mang về khách hàng đó, tôi sẽ được thưởng tối đa bao nhiêu tiền?",
+    "expected_tool": ["query_sql_db", "search_policy_docs"],
+    "evaluation_criteria": "Chaining Database & Policy: Gọi SQL tìm tổng tiền của KH top 1 -> Gọi RAG tìm mức thưởng (5%) -> Tính toán 5% của tổng tiền vừa tìm được.",
+    "complexity": "expert"
+  },
+  {
+    "id": "multihop_007",
+    "question": "Liệt kê TẤT CẢ các khoản tiền, phúc lợi và số ngày nghỉ mà một nhân viên chắc chắn nhận được khi họ chạm mốc thâm niên 10 năm tại công ty.",
+    "expected_tool": "search_policy_docs",
+    "evaluation_criteria": "Retrieval toàn diện: Agent phải tìm ra cả 'chuyến du lịch 10 triệu', 'nghỉ 03 ngày có hưởng lương', '14 ngày phép năm' (12 + 2 ngày do 10 năm).",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_008",
+    "question": "Tìm sản phẩm có tỷ suất lợi nhuận (profit_margin = price - cost) cao nhất. Hiện tại trong kho còn bao nhiêu sản phẩm đó?",
+    "expected_tool": "query_sql_db",
+    "evaluation_criteria": "Suy luận SQL phức tạp: Agent có thể viết 1 câu lệnh JOIN products và inventory, hoặc chia làm 2 câu lệnh chạy liên tiếp.",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_009",
+    "question": "Tính tổng doanh thu (total_amount) của tất cả khách hàng đến từ thành phố 'New York' trong các đơn hàng đã hoàn thành. Viết lại câu truy vấn nếu gặp lỗi.",
+    "expected_tool": "query_sql_db",
+    "evaluation_criteria": "Kiểm tra khả năng JOIN bảng customers và orders kèm 2 điều kiện WHERE. Nếu lỗi cú pháp, Agent phải tận dụng state 'retry_count' để thử lại.",
+    "complexity": "hard"
+  },
+  {
+    "id": "multihop_010",
+    "question": "Tính toán và so sánh tỷ trọng (phần trăm) doanh thu của 3 danh mục 'Electronics', 'Clothing' và 'Home' so với tổng doanh thu toàn công ty. Sau đó vẽ biểu đồ tròn (pie chart) hiển thị % này.",
+    "expected_tool": ["query_sql_db", "python_chart_maker"],
+    "evaluation_criteria": "Toàn năng: SQL tính toán phần trăm trực tiếp HOẶC SQL lấy doanh thu tuyệt đối rồi dùng Python tính phần trăm và vẽ chart.",
+    "complexity": "expert"
+  }
+]
