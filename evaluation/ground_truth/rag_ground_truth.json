@@ -1,0 +1,242 @@
+[
+  {
+    "id": "rag_001",
+    "question": "Công ty có chính sách xét tăng lương cơ bản bao nhiêu lần một năm?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty xét tăng lương cơ bản 1 lần/năm, tuy nhiên thu nhập có thể gia tăng theo năng suất và kinh nghiệm đóng góp thực tế vào dự án mà không cần đợi 1 năm.",
+    "expected_contexts": ["Xét tăng lương CƠ BẢN 1 lần/năm. (Trên cơ bản nhân viên công ty IVS không cần đợi 1 năm mới có thể thay đổi mức thu nhập mà mức thu nhập gia tăng theo năng suất và kinh nghiệm nhân viên đóng góp thực tế vào dự án.)"],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_002",
+    "question": "Ngoài lương, công ty có những khoản trợ cấp cố định nào cho đời sống cá nhân của nhân viên?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty có các khoản trợ cấp bao gồm trợ cấp nhà ở, trợ cấp điện thoại và trợ cấp tham gia các câu lạc bộ ngoại khóa.",
+    "expected_contexts": ["- Trợ cấp nhà ở.", "- Trợ cấp điện thoại.", "- Trợ cấp tham gia các câu lạc bộ ngoại khóa."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_003",
+    "question": "Mức trợ cấp tối đa khi nhân viên thi đạt các chứng chỉ chuyên môn là bao nhiêu?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty trợ cấp lên đến 1.000.000 VNĐ/lần cho các chứng chỉ tiếng Nhật, quản lý dự án (PMF, PMP), SAP Consultant, lập trình Java, .Net.",
+    "expected_contexts": ["Trợ cấp bằng cấp cho nhân viên đạt chứng chỉ tiếng Nhật, chứng chỉ quản lý dự án (như PMF, PMP), SAP Consultant, Chứng chỉ lập trình Java, .Net lên đến 1,000,000/lần."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_004",
+    "question": "Quy định về việc trả tiền làm thêm giờ (tăng ca) của công ty như thế nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty trả tiền tăng ca đầy đủ theo đúng luật lao động hiện hành.",
+    "expected_contexts": ["Trả tiền tăng ca đầy đủ theo luật lao động hiện hành."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_005",
+    "question": "Mỗi năm nhân viên có bao nhiêu ngày nghỉ phép tiêu chuẩn và chế độ cộng dồn theo thâm niên ra sao?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Nhân viên có 12 ngày phép/năm, nếu làm việc đủ 5 năm sẽ được cộng thêm 1 ngày phép.",
+    "expected_contexts": ["12 ngày phép/năm. Làm việc 5 năm được thêm 1 ngày phép."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_006",
+    "question": "Thời gian làm việc tiêu chuẩn trong tuần của công ty kéo dài từ ngày nào đến ngày nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Thời gian làm việc tiêu chuẩn của công ty là từ thứ 2 đến thứ 6.",
+    "expected_contexts": ["Làm việc từ thứ 2 đến thứ 6."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_007",
+    "question": "Nhân viên nữ làm việc trên 3 năm có đặc quyền gì về giờ làm việc?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Nhân viên nữ làm việc trên 3 năm và ký hợp đồng không xác định thời hạn được đặc quyền làm việc 7 giờ/ngày.",
+    "expected_contexts": ["Nhân viên nữ làm việc trên 3 năm và có hợp đồng không xác định thời hạn thì được làm việc 7 giờ/ngày."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_008",
+    "question": "Nhân viên được thưởng Tết Nguyên đán ở mức nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Nhân viên được thưởng Tết Nguyên đán tối thiểu là tháng lương 13 và có thể lên đến tháng lương thứ 18 tùy vào tình hình kinh doanh của công ty.",
+    "expected_contexts": ["Tết nguyên đán (thưởng tối thiểu tháng lương 13 và lên đến tháng lương thứ 18 tùy tình hình kinh doanh)"],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_009",
+    "question": "Vào các dịp lễ 2/9 và 30/4, công ty có chế độ thưởng như thế nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Vào dịp lễ 2/9 và 30/4, công ty có mức thưởng tối thiểu là 10% tùy thuộc vào tình hình kinh doanh.",
+    "expected_contexts": ["2/9 30/4 (tối thiểu 10% tùy tình hình kinh doanh)."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_010",
+    "question": "Ngoài thưởng Tết và Lễ, công ty còn có các khoản thưởng hiệu suất công việc nào khác không?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Có, công ty còn có chế độ thưởng theo quý, thưởng theo dự án và thưởng cá nhân xuất sắc.",
+    "expected_contexts": ["- Thưởng theo quí.", "Thưởng theo dự án.", "- Thưởng cá nhân xuất sắc."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_011",
+    "question": "Mức thưởng thâm niên cho nhân viên gắn bó 5 năm với công ty là gì?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Nhân viên gắn bó 5 năm được thưởng một chuyến du lịch trị giá 5 triệu VNĐ và được nghỉ 03 ngày có hưởng lương.",
+    "expected_contexts": ["Thưởng thâm niên nhân viên 5 năm, 10 năm một chuyến du lịch trị giá 5 triệu (5 năm)... và được nghỉ 03 ngày có hưởng lương."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_012",
+    "question": "Nhân viên gắn bó 10 năm sẽ nhận được phần thưởng thâm niên như thế nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Nhân viên gắn bó 10 năm được thưởng một chuyến du lịch trị giá 10 triệu VNĐ và được nghỉ 03 ngày có hưởng lương.",
+    "expected_contexts": ["Thưởng thâm niên nhân viên... 10 năm một chuyến du lịch trị giá... 10 triệu (10 năm) và được nghỉ 03 ngày có hưởng lương."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_013",
+    "question": "Nếu nhân viên giới thiệu dự án thành công cho công ty thì được hưởng phần trăm hoa hồng là bao nhiêu?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Nhân viên giới thiệu dự án sẽ được thưởng hoa hồng từ 2% đến 5% trên báo giá cho khách hàng.",
+    "expected_contexts": ["Thưởng nhân viên giới thiệu dự án, tiền thưởng từ 2->5% trên báo giá cho khách hàng."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_014",
+    "question": "Mức tiền thưởng cao nhất khi một nhân viên giới thiệu thành công nhân sự mới cho công ty là bao nhiêu?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Mức tiền thưởng giới thiệu nhân sự cho công ty có thể lên đến 70.000.000 VNĐ cho mỗi trường hợp.",
+    "expected_contexts": ["Thưởng giới thiệu nhân sự cho công ty lên đến 70,000,000/ trường hợp."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_015",
+    "question": "Công ty có những khoản trợ cấp tài chính nào dành riêng cho con của nhân viên dưới 3 tuổi?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty trợ cấp nuôi con nhỏ dưới 3 tuổi với mức 500.000 VNĐ/bé/tháng và trợ cấp chủng ngừa vaccine 3.000.000 VNĐ/bé/năm.",
+    "expected_contexts": ["Trợ cấp nuôi con nhỏ dưới 3 tuổi : 500,000/bé/tháng.", "Trợ cấp chủng ngừa (vaccine) con nhân viên dưới 3 tuổi: 3,000,000/bé/ năm."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_016",
+    "question": "Số tiền công ty dùng để chúc mừng khi nhân viên sinh con mới là bao nhiêu?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty chúc mừng sinh con mới số tiền là 10.000.000 VNĐ cho mỗi bé.",
+    "expected_contexts": ["Chúc mừng sinh con mới: 10,000,000/bé."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_017",
+    "question": "Nhân viên tổ chức đám cưới sẽ nhận được tiền chúc mừng tối đa là bao nhiêu từ công ty?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty chúc mừng đám cưới số tiền là 10.000.000 VNĐ/nhân viên, phụ thuộc vào thâm niên của người đó.",
+    "expected_contexts": ["Chúc mừng đám cưới: 10,000,000/nhân viên (tùy thâm niên nhân viên)"],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_018",
+    "question": "Công ty có chế độ hỗ trợ nào khi nhân viên hoặc người thân gặp vấn đề sức khỏe hoặc tang chế không?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty có chế độ thăm hỏi nhân viên ốm đau, nằm viện cũng như thăm hỏi gia đình nhân viên khi ốm đau, tang chế.",
+    "expected_contexts": ["Thăm hỏi nhân viên ốm đau, nằm viện. [cite: 42]", "- Có chế độ thăm hỏi gia đình nhân viên ốm đau, tang chế."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_019",
+    "question": "Công ty hỗ trợ bảo hiểm tai nạn cho nhân viên đi công tác trong nước như thế nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty cung cấp bảo hiểm tai nạn 24/24 cho các trường hợp thường xuyên công tác trong nước.",
+    "expected_contexts": ["Bảo hiểm tai nạn 24/24 cho các trường hợp thường xuyên công tác trong nước."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_020",
+    "question": "Nhân viên đi công tác nước ngoài có được mua bảo hiểm không?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Có, công ty có chế độ bảo hiểm công tác nước ngoài cho nhân viên.",
+    "expected_contexts": ["- Bảo hiểm công tác nước ngoài."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_021",
+    "question": "Công ty tổ chức các lớp học ngoại ngữ nào để đào tạo nhân viên?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty cho phép nhân viên tham gia các lớp học ngoại ngữ là tiếng Anh và tiếng Nhật.",
+    "expected_contexts": ["Được tham gia các lớp học ngoại ngữ tiếng Anh, tiếng Nhật."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_022",
+    "question": "Sinh viên mới ra trường khi tham gia chương trình fresher của công ty có được hỗ trợ tài chính không?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Có, sinh viên mới ra trường tham gia chương trình fresher được hưởng trợ cấp trong quá trình đào tạo cách làm việc và kỹ thuật cơ bản.",
+    "expected_contexts": ["Riêng sinh viên mới ra trường có chương trình fresher (có hưởng trợ cấp) nhằm đào tạo cách làm việc, kỹ thuật cơ bản."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_023",
+    "question": "Mức chi phí công ty chu cấp cho nhân viên đi đào tạo bên ngoài là bao nhiêu?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Thông thường công ty chu cấp khoảng 100 đến 200 USD cho mỗi trường hợp, tuy nhiên mức này có thể lên đến 5.000 USD/trường hợp tùy vào thực tế.",
+    "expected_contexts": ["Chế độ chu cấp kinh phí đi đào tạo bên ngoài (Theo thực tế năm 2017 lên đến 5,000$/trường hợp. Thông thường là 100$->200$/trường hợp)"],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_024",
+    "question": "Khi gặp hoàn cảnh khó khăn, nhân viên có thể vay tiền mặt từ công ty với mức lãi suất như thế nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Nhân viên có hoàn cảnh khó khăn có thể được công ty hỗ trợ vay tiền mặt với mức lãi suất 0% hoặc 6%/năm tùy theo từng gói vay.",
+    "expected_contexts": ["Nhân viên có hoàn cảnh khó khăn được công ty hỗ trợ vay tiền mặt lãi suất 0% hay 6%/năm theo từng gói vay."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_025",
+    "question": "Trong năm, công ty tặng quà phúc lợi cho nhân viên vào những dịp nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty tặng quà cho nhân viên vào các dịp Sinh nhật, Trung thu, 8/3, 20/10 và Tết.",
+    "expected_contexts": ["Sinh nhật, trung thu, 8/3, 20/10, Tết đều có quà cho nhân viên."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_026",
+    "question": "Con của nhân viên được nhận quà từ công ty vào dịp lễ nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Con của nhân viên được tặng quà vào dịp Quốc tế Thiếu nhi.",
+    "expected_contexts": ["Tặng quà dịp quốc tế thiếu nhi cho con nhân viên."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_027",
+    "question": "Công ty tổ chức du lịch hàng năm cho nhân viên ở những địa điểm có tiêu chuẩn như thế nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty tổ chức du lịch mỗi năm 1 lần tại các resort đạt tiêu chuẩn 4 hoặc 5 sao.",
+    "expected_contexts": ["Du lịch mỗi năm 1 lần ở resort tiêu chuẩn 4, 5 sao."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_028",
+    "question": "Khoảng thời gian nghỉ ngơi (breaktime) buổi chiều của nhân viên kéo dài bao lâu và dùng để làm gì?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Breaktime buổi chiều kéo dài từ 15 đến 30 phút, dùng để tập thể dục, tăng cường giao tiếp, giao lưu và ăn nhẹ.",
+    "expected_contexts": ["Mỗi ngày được breaktime từ 15 đến 30 phút chiều để tập thể dục, giao lưu tăng cường giao tiếp và ăn nhẹ."],
+    "complexity": "medium"
+  },
+  {
+    "id": "rag_029",
+    "question": "Nếu nhân viên phải ở lại làm việc ngoài giờ thì công ty có chính sách hỗ trợ gì không?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty có chính sách hỗ trợ tiền ăn cho nhân viên khi làm việc ngoài giờ.",
+    "expected_contexts": ["- Hỗ trợ ăn làm việc ngoài giờ."],
+    "complexity": "easy"
+  },
+  {
+    "id": "rag_030",
+    "question": "Đóng bảo hiểm cho nhân viên được công ty thực hiện theo quy định nào?",
+    "expected_tool": "search_policy_docs",
+    "ground_truth": "Công ty đóng Bảo hiểm đầy đủ cho nhân viên theo quy định của luật lao động hiện hành.",
+    "expected_contexts": ["- Đóng Bảo hiểm đầy đủ theo qui định luật lao động hiện hành."],
+    "complexity": "easy"
+  }
+]
