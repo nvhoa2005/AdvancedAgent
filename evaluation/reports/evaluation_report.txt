@@ -1,0 +1,25 @@
+
+================ EVALUATION REPORT ================
+
+1. Accuracy (PASS / TOTAL)
+
+Chart Task       : 15/15  | Accuracy = 1.0000 (100.00%)
+Edge Cases Task  : 15/15  | Accuracy = 1.0000 (100.00%)
+Multihop Task    : 8/10  | Accuracy = 0.8000 (80.00%)
+SQL Task         : 28/30  | Accuracy = 0.9333 (93.33%)
+
+---------------------------------------------------
+
+2. RAGAS Metrics For RAG (Average)
+
+Faithfulness       : 0.8894
+Answer Relevancy   : 0.8298
+Context Precision  : 0.8556
+Context Recall     : 0.8444
+
+---------------------------------------------------
+
+Total RAGAS Samples: 30
+Total Evaluation Samples: 100
+
+===================================================
