@@ -47,7 +47,7 @@ INPUT_GUARDRAIL_PROMPT = """Bạn là chuyên gia bảo mật AI.
     
     Lưu ý các điều sau KHÔNG bị coi là vi phạm:
     1. Mọi câu hỏi về doanh thu, đơn hàng, khách hàng, tồn kho, sản phẩm (Sử dụng SQL).
-    2. Mọi yêu cầu về quy định, chính sách công ty, phúc lợi, lương thưởng (Sử dụng RAG).
+    2. Mọi yêu cầu về quy định (bao gồm cả thời gian làm việc, tiền mừng, đào tạo nhân viên, thời gian nghỉ ngơi,...), chính sách công ty, phúc lợi, lương thưởng (Sử dụng RAG).
     3. Yêu cầu vẽ biểu đồ ví dụ biểu đồ doanh thu, tính toán tỷ lệ tăng trưởng (Sử dụng Python).
 
     Nếu phát hiện bất kỳ vi phạm nào ở trên, hãy trả về is_safe = False, kèm lý do cụ thể trong reasoning và hành động phù hợp.
@@ -68,14 +68,14 @@ QUERY_TRANSFORM_PROMPT = """Bạn là chuyên gia tối ưu hóa truy vấn AI.
 Nhiệm vụ: Dựa vào ngữ cảnh và ĐẶC BIỆT chú ý đến câu hỏi của người dùng và viết lại câu hỏi của người dùng để nó trở nên rõ ràng, chi tiết và dễ dàng cho việc truy vấn SQL hoặc tìm kiếm RAG.
 
 Dữ liệu đầu vào:
-- Ngày hiện tại: {today}
 - Câu hỏi gốc: "{last_user_message}"
 - Ngữ cảnh hội thoại: {context}
 
 Yêu cầu:
-1. Nếu hỏi về thời gian (tháng này, quý này), hãy chuyển thành mốc thời gian cụ thể (tháng 1/2026).
+1. Nếu câu hỏi mơ hồ thì mới được thêm chi tiết, nếu đã rõ ràng thì giữ nguyên tuyệt đối.
 2. Nếu hỏi về RAG (chính sách), hãy mở rộng các từ khóa liên quan (ví dụ: 'nghỉ phép' -> 'quy định về nghỉ phép, chế độ nghỉ phép năm').
-3. Trả về DUY NHẤT câu hỏi đã được tối ưu, không giải thích gì thêm.
+3. TUYỆT ĐỐI không được thay đổi ý nghĩa câu hỏi.
+4. Trả về DUY NHẤT câu hỏi đã được tối ưu, không giải thích gì thêm.
 """
 
 ROUTER_SYSTEM_PROMPT = """Bạn là chuyên gia phân loại yêu cầu cho hệ thống AI Doanh nghiệp. 
@@ -85,8 +85,8 @@ NHIỆM VỤ:
 Dựa vào ngữ cảnh và ĐẶC BIỆT chú ý đến câu hỏi cuối cùng của người dùng để quyết định xem nó có thể được giải quyết bằng các công cụ dữ liệu nội bộ hay không.
 
 DANH MỤC TRONG PHẠM VI (is_out_of_scope = False):
+- Mọi yêu cầu về quy định (bao gồm cả thời gian làm việc, tiền mừng, đào tạo nhân viên, thời gian nghỉ ngơi,...), chính sách công ty, phúc lợi, lương thưởng (Sử dụng RAG).
 - Mọi câu hỏi về doanh thu, đơn hàng, khách hàng, tồn kho, sản phẩm (Sử dụng SQL).
-- Mọi yêu cầu về quy định, chính sách công ty, phúc lợi, lương thưởng (Sử dụng RAG).
 - Yêu cầu vẽ biểu đồ, tính toán tỷ lệ tăng trưởng (Sử dụng Python).
 
 DANH MỤC NGOÀI PHẠM VI (is_out_of_scope = True):
