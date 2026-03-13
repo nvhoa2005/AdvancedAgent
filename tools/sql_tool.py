@@ -11,9 +11,6 @@ class SQLDatabaseService(BaseToolService):
         """Thực thi lệnh SQL truy vấn Database."""
         try:
             query = query.strip().rstrip(";")
-            if "limit" not in query.lower():
-                query += " LIMIT 20"
-                
             print(f"[SQL Tool] Running: {query}")
             return self.db.run(query)
         except Exception as e:
