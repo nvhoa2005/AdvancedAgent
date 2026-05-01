@@ -1,8 +1,9 @@
-langchain==1.2.0
+langchain>=1.2.0
+langchain-core>=1.2.1
 langchain-openai==1.1.6
 langchain-community==0.4.1
 langchain-postgres==0.0.16
-langgraph==1.0.5
+langgraph>=1.1.4
 psycopg2-binary==2.9.11
 python-dotenv==1.2.1
 Faker==39.0.0
